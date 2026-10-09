@@ -1,0 +1,41 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: yustextile
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5433:5432"
+    volumes:
+      - yustextile_pg:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d yustextile"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  api:
+    build: .
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: "postgresql://postgres:postgres@postgres:5432/yustextile?schema=public"
+      ADMIN_API_KEY: "${ADMIN_API_KEY}"
+      ADMIN_EMAIL: "${ADMIN_EMAIL}"
+      ADMIN_PASSWORD: "${ADMIN_PASSWORD}"
+      PORT: "4000"
+      CORS_ORIGINS: "${CORS_ORIGINS}"
+      UPLOAD_DIR: "uploads"
+      NODE_ENV: "development"
+    ports:
+      - "4000:4000"
+    volumes:
+      - yustextile_uploads:/app/uploads
+
+volumes:
+  yustextile_pg:
+  yustextile_uploads:

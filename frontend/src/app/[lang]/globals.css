@@ -1,0 +1,129 @@
+@import "tailwindcss";
+
+:root {
+  --primary: #002825;
+  --secondary: #def5c9;
+  --text-secondary: #555555;
+}
+
+@theme inline {
+  --color-primary: var(--primary);
+  --color-secondary: var(--secondary);
+  --color-textSecondary: var(--text-secondary);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: white;
+  color: var(--primary);
+  overflow-x: hidden;
+}
+
+.partner-marquee {
+  overflow: hidden;
+  mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
+}
+
+.partner-marquee-track {
+  display: flex;
+  width: max-content;
+  animation: partner-scroll linear infinite;
+}
+
+.partner-marquee:hover .partner-marquee-track {
+  animation-play-state: paused;
+}
+
+.partner-marquee-group {
+  display: flex;
+  flex: none;
+  gap: 24px;
+  padding-right: 24px;
+}
+
+.partner-marquee-card {
+  flex: none;
+  width: 160px;
+  height: 112px;
+  padding: 20px;
+  border-radius: 16px;
+  background: #f3f5f7;
+}
+
+@keyframes partner-scroll {
+  to { transform: translateX(-50%); }
+}
+
+@media (max-width: 640px) {
+  .partner-marquee-card {
+    width: 128px;
+    height: 96px;
+    padding: 16px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .partner-marquee {
+    overflow-x: auto;
+    mask-image: none;
+  }
+
+  .partner-marquee-track { animation: none; }
+  .partner-marquee-group[aria-hidden="true"] { display: none; }
+}
+
+.defaultButton {
+  @apply flex px-6 py-3 gap-1.5 rounded-[97px] justify-center items-center  cursor-pointer;
+}
+
+.checkout-phone .iti {
+  width: 100%;
+}
+
+.checkout-phone .iti input.iti__tel-input {
+  width: 100%;
+  min-height: 48px;
+  padding-top: 12px;
+  padding-bottom: 12px;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.no-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+.navItem {
+  text-decoration: none;
+  position: relative;
+}
+
+.navItem {
+  text-decoration: none;
+  transition: 0.4s;
+  border-bottom: 2px solid transparent;
+}
+
+.navItem:hover {
+  border-bottom: 2px solid var(--secondary);
+}
+
+@keyframes dialog-enter {
+  from { opacity: 0; transform: translateY(16px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.dialog-panel {
+  animation: dialog-enter 220ms ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dialog-panel { animation: none; }
+}

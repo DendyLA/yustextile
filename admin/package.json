@@ -1,0 +1,29 @@
+{
+  "name": "yus-textile-admin",
+  "private": true,
+  "version": "2.0.0",
+  "scripts": {
+    "dev": "node node_modules/next/dist/bin/next dev --hostname 127.0.0.1 --port 3001",
+    "build": "node node_modules/next/dist/bin/next build",
+    "start": "node node_modules/next/dist/bin/next start --hostname 127.0.0.1 --port 3001",
+    "typecheck": "node node_modules/typescript/bin/tsc --noEmit",
+    "format": "node node_modules/prettier/bin/prettier.cjs --write src next.config.ts scripts",
+    "import:content": "node scripts/import-site-content.mjs"
+  },
+  "engines": {
+    "node": ">=20.9.0"
+  },
+  "dependencies": {
+    "next": "^16.3.8",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.4",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "prettier": "^3.9.9",
+    "sharp": "^0.35.5",
+    "typescript": "^7.0.2"
+  }
+}

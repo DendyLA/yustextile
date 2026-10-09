@@ -1,0 +1,23 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Next.js
+.next/
+out/
+*.tsbuildinfo
+next-env.d.ts
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+.venv/
+*.pyc
+
+# IDE / OS
+.vscode/
+.DS_Store

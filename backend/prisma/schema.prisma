@@ -1,0 +1,198 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Localized JSON values use {"tk":"...","ru":"...","en":"..."}.
+model Promo {
+  id        String   @id @default(uuid())
+  title     Json
+  text      Json
+  images    String[]
+  sortOrder Int      @default(0)
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Catalog {
+  id        String   @id @default(uuid())
+  title     Json
+  pdfTk     String?
+  pdfRu     String?
+  pdfEn     String?
+  active    Boolean  @default(true)
+  updatedAt DateTime @updatedAt
+}
+
+model Category {
+  id        String     @id @default(uuid())
+  slug      String     @unique
+  title     Json
+  image     String?
+  parentId  String?
+  parent    Category?  @relation("CategoryTree", fields: [parentId], references: [id], onDelete: Restrict)
+  children  Category[] @relation("CategoryTree")
+  products  Product[]
+  sortOrder Int        @default(0)
+  active    Boolean    @default(true)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  @@index([parentId, sortOrder])
+}
+
+model Product {
+  id           String                  @id @default(uuid())
+  slug         String                  @unique
+  categoryId   String
+  category     Category                @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  title        Json
+  text         Json
+  manufacturer Json?
+  priceLabel   Json?
+  minimumOrder Json?
+  images       String[]
+  recommended  Boolean                 @default(false)
+  active       Boolean                 @default(true)
+  sortOrder    Int                     @default(0)
+  specs        ProductCharacteristic[]
+  orderItems   OrderItem[]
+  createdAt    DateTime                @default(now())
+  updatedAt    DateTime                @updatedAt
+
+  @@index([categoryId, active])
+  @@index([recommended, active])
+}
+
+model ProductCharacteristic {
+  id        String  @id @default(uuid())
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  name      Json
+  value     Json
+  sortOrder Int     @default(0)
+
+  @@index([productId, sortOrder])
+}
+
+model AboutPage {
+  id        String   @id @default("main")
+  title     Json
+  text      Json
+  updatedAt DateTime @updatedAt
+}
+
+model AboutBlock {
+  id        String   @id @default(uuid())
+  image     String?
+  title     Json
+  lead      Json?
+  text      Json
+  sortOrder Int      @default(0)
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Partner {
+  id        String   @id @default(uuid())
+  logo      String
+  name      Json?
+  url       String?
+  sortOrder Int      @default(0)
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ProductionComplex {
+  id          String   @id @default(uuid())
+  slug        String   @unique
+  image       String
+  title       Json
+  text        Json
+  foundedYear Int?
+  sortOrder   Int      @default(0)
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Faq {
+  id        String   @id @default(uuid())
+  question  Json
+  answer    Json
+  sortOrder Int      @default(0)
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model CompanyContact {
+  id          String   @id @default("main")
+  email       String
+  phone       String
+  whatsapp    String
+  telegramPhone String?
+  address     Json
+  logo        String?
+  updatedAt   DateTime @updatedAt
+}
+
+enum OrderStatus {
+  NEW
+  CONTACTED
+  CLOSED
+  CANCELLED
+}
+
+model Order {
+  id        String      @id @default(uuid())
+  name      String?
+  phone     String
+  email     String
+  country   String
+  address   String
+  comment   String?
+  status    OrderStatus @default(NEW)
+  items     OrderItem[]
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+
+  @@index([createdAt])
+}
+
+model OrderItem {
+  id           String  @id @default(uuid())
+  orderId      String
+  order        Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId    String
+  product      Product @relation(fields: [productId], references: [id], onDelete: Restrict)
+  productTitle Json
+  quantity     Int
+}
+
+model BlogPost {
+  id          String   @id @default(uuid())
+  slug        String   @unique
+  image       String
+  title       Json
+  text        Json
+  active      Boolean  @default(true)
+  publishedAt DateTime @default(now())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([active, publishedAt])
+}
+
+model NewsletterSubscriber {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  createdAt DateTime @default(now())
+}
